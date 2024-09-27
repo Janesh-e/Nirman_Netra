@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Authorization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo/final_logo.png') }}" alt="Logo">
+            </div>
+            <div class="title">
+                <h1>NIRMAN NETRA</h1>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <h1>Checking Authorization of Buildings</h1>
+
+        <div class="container">
+            <!-- Upload image form -->
+            <div class="upload-section">
+                <form action="{{ url_for('upload_authorization_image') }}" method="POST" enctype="multipart/form-data">
+                    <label for="file">Upload Image (JPG or TIFF):</label><br>
+                    <input type="file" name="file" accept=".jpg,.jpeg,.tiff,.tif" required><br><br>
+                    <button type="submit">Upload Image</button>
+                </form>
+            </div>
+
+            <!-- Display processed image after model inference -->
+            {% if predicted_mask_image_filename %}
+            <div class="result-section">
+                <label>Processed Image with Building Detection:</label><br>
+                <img src="{{ url_for('uploaded_file', filename=predicted_mask_image_filename) }}" alt="Processed Image">
+            </div>
+            <h3>Find Coordinates and addresses of detected buildings:</h3>
+            <form action="{{ url_for('get_coordinates_from_pixel') }}" method="POST">
+                <button type="submit">Find Coordinates</button>
+                <input type="hidden" name="bounding_boxes" value="{{ bounding_boxes | tojson }}">
+                <input type="hidden" name="file_path" value="{{ file_path }}">
+                <input type="hidden" name="predicted_mask_image_filename" value="{{ predicted_mask_image_filename }}">
+            </form>
+            {% endif %}
+        </div>
+
+            {% if lat_long_pairs and addresses %}
+            <div class="table-container">
+            <table>
+                <tr>
+                    <th>Building No</th>
+                    <th>Coordinates (Latitude, Longitude)</th>
+                    <th>Address</th>
+                </tr>
+                <!-- Iterate over the zipped list to populate the table -->
+                {% for index, (lat_long, address) in enumerate(coordinates_and_addresses, start=0) %}
+                    <tr>
+                        <td>{{ index }}</td>  <!-- Building No (index) -->
+                        <td>{{ lat_long[0] }}, {{ lat_long[1] }}</td>  <!-- Coordinates (Latitude, Longitude) -->
+                        <td>{{ address }}</td>  <!-- Address -->
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Nirman Netra. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

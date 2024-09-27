@@ -1,0 +1,341 @@
+/* Global settings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    background-image: url("./logo/bg.jpg");
+    font-family: 'Inter', sans-serif;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+header {
+    justify-content: space-around;
+    gap: 60px;
+    padding: 10px 20px 10px 20px;
+    background-color: #131224;
+    display: flex;
+    align-items: center;
+    color: white;
+    opacity: 0.9;
+}
+
+/* Header layout */
+.header-container {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+}
+
+.logo img {
+    height: 80px;
+    width: 120px;
+}
+
+.title h1 {
+    padding-left: 80px;
+    flex-grow: 1;
+    text-align: center;
+    font-size: 55px;
+    color: #FFFFFF;
+}
+
+nav {
+    height: 100%;
+    margin-right: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    gap: 20px;
+}
+
+nav a {
+    transform: translateY(30px) translateX(20px);
+    justify-content: flex-end;
+    align-items: flex-end;
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* Main content */
+main {
+    min-height: 90vh;
+    text-align: center;
+    padding: 20px 20px;
+}
+
+h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.upload-container .main-button {
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 60px;
+    background: #131224;
+    border-radius: 20px;
+    box-shadow: rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.btn {
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 18px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.auth-btn {
+    text-align: center;
+    background-color: #c80036;
+}
+
+.auth-btn:hover {
+    background-color: #fff5e1;
+    color:#000000;
+}
+
+.reg-btn {
+    background-color: #580895;
+}
+
+.reg-btn:hover {
+    background-color:#FFF5E1 ;
+    color:#000000;
+}
+
+
+/* Upload Container Styles */
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.upload-section {
+    color: white;
+    margin-bottom: 20px;
+}
+
+.upload-section label {
+    font-size: 1.1rem;
+    color: #000000;
+}
+
+.upload-section button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.upload-section button:hover {
+    background-color:  #0056b3;
+}
+
+/* Process Section */
+.process-section h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.process-section button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 22px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.process-section button:hover {
+    background-color: #0056b3;
+}
+
+/* Result Section */
+.result-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.result-section label {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.result-section img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.dimensions-container table{
+    padding-left: 20px;
+    flex-basis: 50%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.end{
+    border-radius: 10px;
+    border: none;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    background-color: #c80036;
+    padding: 15px 20px;
+    margin: 10px;
+}
+
+/* Footer */
+footer {
+    background-color: #131224;
+    opacity: 0.9;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+}
+
+footer p {
+    margin: 0;
+    font-size:0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header .sections {
+        flex-direction: column;
+    }
+
+    .upload-container .sections {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+
+#actual-dimensions-section {
+    margin-top: 20px;
+    display: none;
+}
+
+/* Popup container */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.popup-content h2 {
+    text-align: center;
+}
+
+.popup-content form label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+.popup-content form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Add New Drone Button */
+.add-drone button,  .calculate-section button, .choose-drone button, .f-a button {
+    font-size: 22px;
+    transition: background-color 0.3s ease;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.add-drone button:hover, .calculate-section button:hover, .choose-drone button:hover, .f-a button:hover{
+    background-color: #0056b3;
+}
+
+.dbd {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Styling for the table container with a white background */
+.table-container {
+    background-color: white;  /* White background */
+    padding: 20px;            /* Padding inside the container */
+    margin: 20px 0;           /* Margin to create space around the container */
+    border-radius: 10px;      /* Rounded corners */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle box-shadow */
+}
+
+/* Optional table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;  /* Remove extra spaces between table cells */
+}
+
+table, th, td {
+    border: 1px solid #ddd;     /* Table borders */
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;  /* Light background color for headers */
+}

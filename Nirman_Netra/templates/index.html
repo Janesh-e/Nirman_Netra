@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirmaan Netra</title>
+    <link rel="stylesheet" href="./static/style.css">
+    <!-- Importing Google Fonts for better typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo/final_logo.png') }}" alt="Logo">
+            </div>
+
+        <div class="title"><h1>NIRMAN NETRA</h1></div>
+
+        <nav>
+            <a href="https://dfs.delhi.gov.in/dfs/delhi-building-bye-law-related-fire#:~:text=Entrance%20to%20fire%20escape%20shall,constructed%20of%20non%2Dcombustible%20materials" 
+               target="_blank" rel="noopener noreferrer">Rules and Regulations</a>
+        </nav>
+        </div>
+
+            
+    </header>
+
+    <main>
+        <section class="intro">
+            <p>
+                Use this platform to upload images of ongoing constructions or registered lands. 
+                Our system will help determine whether the property is authorized or not.
+            </p>
+        </section>
+
+        <div class="upload-container">
+                    <div class="main-button">
+                        <a href="{{ url_for('check_authorization') }}" class="btn auth-btn">
+                            CHECK AUTHORIZATION
+                        </a>
+                        <a href="{{ url_for('check_regulations') }}" class="btn reg-btn">
+                            CHECK REGULATIONS
+                        </a>
+                    </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Nirman Netra. All rights reserved.</p>
+    </footer>
+</body>
+</html>

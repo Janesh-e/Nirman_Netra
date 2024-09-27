@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Regulations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo/final_logo.png') }}" alt="Logo">
+            </div>
+            <div class="title">
+                <h1>NIRMAN NETRA</h1>
+            </div>
+            <div class="add-drone">
+                <form action="{{ url_for('add_drone') }}" method="POST">
+                    <button type="submit">Add New Drone</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h1>Check Regulations for a Building</h1>
+        </section>
+
+        <div class="upload-container">
+            <!-- Upload image form -->
+            <div class="upload-section">
+                <form action="{{ url_for('upload_image') }}" method="POST" enctype="multipart/form-data">
+                    <label for="file" style="font-size: 1.2rem;">Upload Image (JPG or TIFF):</label><br />
+                    <input type="file" name="file" accept=".jpg,.jpeg,.tiff" required><br><br>
+                    <button type="submit">Upload Image</button>
+                </form>
+            </div>
+        </div>
+        <!-- Button to trigger image processing after upload -->
+        {% if uploaded_image %}
+        <div class="process-section">
+            <h3>Image uploaded successfully! Now you can detect building dimensions:</h3>
+            <div class="dbd">
+                <form action="{{ url_for('detect_building_dimensions', filename=uploaded_image) }}" method="GET">
+                    <button type="submit">Detect Building Dimensions</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Display processed image after detection -->
+        {% if processed_image %}
+        <h1>Processed Image with Detected Dimensions:</h1>
+        <br />
+        <div class="result-section">
+            <div class="image-container"></div>
+            <img id="processed_image" src="{{ url_for('uploaded_file', filename=processed_image) }}"
+                alt="Processed Image">
+        </div>
+        <br>
+        <div class="table-container">
+            <h3>Detected Bounding Box Dimensions:</h3>
+            <table>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Detected Values</th>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Pixel Width</strong>
+                    </td>
+                    <td>{{ pixel_width }} pixels
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Pixel Height</strong></td>
+                    <td>{{ pixel_height }} pixels</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <!-- Show the next button to calculate actual dimensions -->
+        <div class="calculate-section">
+            <h3>Calculate Actual Dimensions</h3>
+            <form action="{{ url_for('calculate_actual_dimensions_check') }}" method="POST"
+                id="calculate-dimensions-form">
+                <input type="hidden" name="largest_box" value="{{ largest_box | tojson}}">
+                <button type="submit">Calculate Actual Dimensions</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if actual_dimensions %}
+        <!-- Hidden section for input boxes to select drone and flight altitude -->
+        <h1>Choose a Drone</h1>
+        <div class="table-container">
+            <form
+                action="{{ url_for('find_actual_dimensions',processed_image=processed_image,image_width=image_width,image_height=image_height, pixel_width=pixel_width, pixel_height=pixel_height) }}"
+                method="POST">
+                <input type="hidden" name="largest_box" value="{{ largest_box | tojson}}">
+                <label for="drone">Select Drone:</label>
+                <select name="drone" required>
+                    {% for drone in drones %}
+                    <option value="{{ drone.id }}">{{ drone.name }}</option>
+                    {% endfor %}
+                </select><br><br>
+
+                <label for="altitude">Flight Altitude (in meters):</label>
+                <input type="number" name="altitude" required><br><br>
+
+                <button type="submit">Confirm</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if find_actual_dim %}
+        <div class="table-container">
+            <h3>Detected Actual Dimensions:</h3>
+            <p><strong>Building Width:</strong> {{ actual_width }} m</p>
+            <p><strong>Building Height:</strong> {{ actual_height }} m</p>
+            <p><strong>Building Perimeter:</strong> {{ actual_perimeter }} m</p>
+            <p><strong>Building Area:</strong> {{ actual_area }} m^2</p>
+        </div>
+        {% endif %}
+
+        {% if further_analysis %}
+        <h3>Continue Further Analysis?</h3>
+        <div class="f-a">
+            <form action="{{ url_for('cont_further_analysis') }}" method="POST">
+                <button type="submit">Further Analysis</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% if compound_flag %}
+        <div class="table-container">
+            <div>
+                <input type="radio" id="compound_mode" name="mode" value="compound">
+                <label for="compound_mode">Compound Points Mode</label>
+
+                <input type="radio" id="road_mode" name="mode" value="road">
+                <label for="road_mode">Road Points Mode</label>
+
+                <!-- Placeholder for the text that changes based on selected option -->
+                <div id="display_text"></div>
+            </div>
+
+
+            <form id="compoundPointsForm" action="{{ url_for('process_compound_points') }}" method="POST">
+                <!-- Hidden fields to store clicked points -->
+                <input type="hidden" name="side_1" id="side_1">
+                <input type="hidden" name="side_2" id="side_2">
+                <input type="hidden" name="side_3" id="side_3">
+                <input type="hidden" name="side_4" id="side_4">
+            </form>
+
+            <div id="points-list">
+                <!-- Clicked points will be displayed here -->
+            </div>
+
+            <button id="confirm-btn" style="display: none;">Confirm Point</button>
+            <button id="submit-points-btn" style="display: none;" onclick="submitPoints()">Submit All Points</button>
+        </div>
+        {% endif %}
+
+        {% if min_compound_flag %}
+        {% if min_distances %}
+        <div class="table-container">
+            <h3>Minimum Distance from the Building to Compound Sides</h3>
+            <ul>
+                {% for side, distance in min_distances.items() %}
+                <li>{{ side }}: {{ distance }} m</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if road_width_flag %}
+        <div class="table-container">
+            <form id="roadWidthForm" action="{{ url_for('calculate_road_width') }}" method="POST">
+                <!-- Hidden fields to store clicked road points -->
+                <input type="hidden" name="road_point_1" id="road_point_1">
+                <input type="hidden" name="road_point_2" id="road_point_2">
+                <!-- Dropdown to select axis (x-axis or y-axis) (hidden initially) -->
+                <div id="axis_dropdown" style="display: none;">
+                    <label for="axis">Select the axis to measure across:</label>
+                    <select name="axis" id="axis" required>
+                        <option value="x">X-Axis</option>
+                        <option value="y">Y-Axis</option>
+                    </select>
+                </div>
+            </form>
+            <div id="road-points-list">
+                <!-- Clicked road points will be displayed here -->
+            </div>
+
+            <button id="confirm-road-points-btn" style="display: none;">Confirm Point</button>
+            <button id="submit-road-points-btn" style="display: none;" onclick="submitRoadPoints()">Calculate Road
+                Width</button>
+        </div>
+        {% if actual_road_width %}
+        <div class="table-container">
+            <p><strong>Detected Road Width:</strong> {{ actual_road_width }} m </p>
+            <p><strong>(Measured across:</strong> {{ axis }}-axis)</p>
+        </div>
+        {% endif %}
+        {% endif %}
+
+        {% if further_analysis %}
+        <!-- End Session button -->
+        <br />
+        <form action="{{ url_for('end_session') }}" method="POST">
+            <button type="submit" class="end">End Session</button>
+        </form>
+        {% endif %}
+    </main>
+
+
+    <!-- Drone popup form -->
+    {% if show_popup %}
+    <div class="popup">
+        <div class="popup-content">
+            <h2>Add New Drone</h2>
+            <form action="{{ url_for('submit_drone') }}" method="POST">
+                <label for="drone_name">Drone Name:</label>
+                <input type="text" name="drone_name" id="drone_name" required><br>
+
+                <label for="sensor_length">Sensor Length (mm):</label>
+                <input type="number" name="sensor_length" id="sensor_length" required><br>
+
+                <label for="sensor_width">Sensor Width (mm):</label>
+                <input type="number" name="sensor_width" id="sensor_width" required><br>
+
+                <label for="focal_length">Focal Length (mm):</label>
+                <input type="number" name="focal_length" id="focal_length" required><br><br>
+
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+
+    <footer>
+        <p>&copy; 2024 Nirman Netra. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let compoundPoints = [];
+        let currentSide = 1;
+        let roadPoints = [];
+        let currentRoadPoint = 1;
+
+        // General click listener for both modes (compound or road)
+        document.getElementById('processed_image').addEventListener('click', function (event) {
+            const rect = this.getBoundingClientRect();
+            const x = Math.round(event.clientX - rect.left);
+            const y = Math.round(event.clientY - rect.top);
+
+            // Check which mode is active: compound mode or road mode
+            if (document.getElementById('compound_mode').checked && currentSide <= 4) {
+                document.getElementById('confirm-btn').style.display = 'block';
+                document.getElementById('confirm-btn').onclick = function () {
+                    confirmCompoundPoint(x, y);
+                };
+            } else if (document.getElementById('road_mode').checked && currentRoadPoint <= 2) {
+                document.getElementById('confirm-road-points-btn').style.display = 'block';
+                document.getElementById('confirm-road-points-btn').onclick = function () {
+                    confirmRoadPoint(x, y);
+                };
+            }
+        });
+
+        function confirmCompoundPoint(x, y) {
+            if (currentSide <= 4) {
+                compoundPoints.push({ x: x, y: y });
+                document.getElementById('points-list').innerHTML += `<p>Side ${currentSide} = (${x}, ${y})</p>`;
+
+                document.getElementById(`side_${currentSide}`).value = `${x},${y}`;
+                currentSide++;
+
+                document.getElementById('confirm-btn').style.display = 'none';
+
+                if (currentSide > 4) {
+                    document.getElementById('submit-points-btn').style.display = 'block';
+                }
+            }
+        }
+
+        function confirmRoadPoint(x, y) {
+            if (currentRoadPoint <= 2) {
+                roadPoints.push({ x: x, y: y });
+                document.getElementById('road-points-list').innerHTML += `<p>Road Point ${currentRoadPoint} = (${x}, ${y})</p>`;
+
+                document.getElementById(`road_point_${currentRoadPoint}`).value = `${x},${y}`;
+                currentRoadPoint++;
+
+                document.getElementById('confirm-road-points-btn').style.display = 'none';
+
+                if (currentRoadPoint > 2) {
+                    document.getElementById('submit-road-points-btn').style.display = 'block';
+                }
+            }
+        }
+
+        function submitPoints() {
+            document.getElementById('compoundPointsForm').submit();
+        }
+
+        function submitRoadPoints() {
+            const point1 = document.getElementById('road_point_1').value;
+            const point2 = document.getElementById('road_point_2').value;
+
+            if (point1 === '' || point2 === '') {
+                alert('Please select both points before submitting.');
+                return false;
+            }
+
+            document.getElementById('roadWidthForm').submit();
+        }
+    </script>
+    <script>
+        // Function to update the text based on selected radio button
+        function updateText() {
+            let selectedMode = document.querySelector('input[name="mode"]:checked').value;
+            let displayText = document.getElementById('display_text');
+            let axisDropdown = document.getElementById('axis_dropdown');
+
+            if (selectedMode === 'compound') {
+                displayText.innerHTML = "<p>You have selected <strong>Compound Points Mode</strong>. Please click 4 points around the building to calculate Free Space Width.</p>";
+                axisDropdown.style.display = 'none';  // Hide the dropdown
+            } else if (selectedMode === 'road') {
+                displayText.innerHTML = "<p>You have selected <strong>Road Points Mode</strong>. Please click 2 points across the road to calculate its width.</p>";
+                axisDropdown.style.display = 'block';  // Show the dropdown
+            }
+        }
+
+        // Attach event listeners to radio buttons
+        document.getElementById('compound_mode').addEventListener('change', updateText);
+        document.getElementById('road_mode').addEventListener('change', updateText);
+
+        // Initialize with the default selected option
+        window.onload = updateText;
+    </script>
+
+</body>
+
+</html>
