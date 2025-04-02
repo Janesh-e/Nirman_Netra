@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Upload - Nagaram</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='data_upload_style.css') }}">
+</head>
+<body>
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="{{ url_for('static', filename='logo/nagaram_2.png')}}" alt="nagaram">
+            </div>
+ 
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('check_authorization') }}">Authorize</a></li>
+                    <li><a href="{{ url_for('change_detection') }}">Detect Changes</a></li>
+                    <li><a href="{{ url_for('data_upload') }}">View/Upload Data</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="container">
+            <h2>UPLOAD DATA</h2>
+            <div class="group">
+                <section class="add-sector">
+                    <h2>Add New Sector</h2>
+                    <form action="/add_sector" method="POST">
+                        <div class="form-group">
+                            <label for="sector_name">Sector Name</label>
+                            <input type="text" name="sector_name" id="sector_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sector_description">Description</label>
+                            <textarea name="sector_description" id="sector_description"></textarea>
+                        </div>
+                        <button type="submit">Add Sector</button>
+                    </form>
+                </section>
+
+                <section class="add-drone">
+                    <h2>Add New Drone</h2>
+                    <form action="/add_drone" method="POST">
+                        <div class="form-group">
+                            <label for="drone_name">Drone Name</label>
+                            <input type="text" name="drone_name" id="drone_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sensor_length">Sensor Length (mm)</label>
+                            <input type="number" name="sensor_length" id="sensor_length" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="sensor_width">Sensor Width (mm)</label>
+                            <input type="number" name="sensor_width" id="sensor_width" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="focal_length">Focal Length (mm)</label>
+                            <input type="number" name="focal_length" id="focal_length" required>
+                        </div>
+                        <button type="submit">Add Drone</button>
+                    </form>
+                </section>
+                
+                <section class="add-survey">
+                    <h2>Add New Survey</h2>
+                    <form action="/add_survey" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="survey_name">Survey Name</label>
+                            <input type="text" name="survey_name" id="survey_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="survey_date">Survey Date</label>
+                            <input type="date" name="survey_date" id="survey_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="survey_sector">Select Sector</label>
+                            <select name="survey_sector" id="survey_sector" required>
+                                <option value="">-- Select Sector --</option>
+                                {% for sector in sectors %}
+                                    <option value="{{ sector.id }}">{{ sector.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="orthophoto">Upload Orthophoto</label>
+                            <input type="file" name="orthophoto" id="orthophoto" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="btn">Add Survey</button>
+                    </form>
+                </section>
+            </div>
+            <section class="table-contents">
+                <h3>View Table</h3>
+                <form action="/view_table" method="POST">
+                    <label for="table">Choose a Table:</label>
+                    <select name="table" id="tableDropdown" onchange="this.form.submit()">
+                        <option value="" disabled selected>Select a Table</option>
+                        {% for table in tables %}
+                        <option value="{{ table }}" {% if table==selected_table %}selected{% endif %}>{{ table }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% if records %}
+                <table>
+                    <thead>
+                        <tr>
+                            {% for column in records[0].__table__.columns %}
+                            <th>{{ column.name }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in records %}
+                        <tr>
+                            {% for column in record.__table__.columns %}
+                            <td>{{ record | get_attr(column.name) }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </section>
+            <footer>
+                <i class="fa fa-copyright" aria-hidden="true"></i> 2025 Nagaram. All rights reserved.
+            </footer>
+        </main>
+
+        
+    </div>
+
+    
+</body>
+</html>

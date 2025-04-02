@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Fira+Sans:wght@400&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+body {
+    height: 100%;
+    background-color: #F8F9FA;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.upload-section {
+    margin-left: 150px;
+    margin-right: 150px;
+    padding: 50px;
+    width: 400px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid #61dafb;
+}
+
+img {
+    width: 200px;
+}
+
+.title h1 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bolder;
+    font-size: 40px;
+    color: #FF4C29;
+}
+
+h1 {
+    font-size: 38px;
+    color: #61dafb;
+    font-family: 'Poppins', sans-serif;
+}
+
+select {
+    width: 200px;
+    padding: 10px;
+    font-size: 18px;
+    border: 1.3px solid #61dafb;
+    border-radius: 10px;
+    background-color: #4f6381;
+    color: #ffffff;
+}
+
+select:focus {
+    outline: none;
+    border-color: #61dafb;
+}
+
+.upload-btn {
+    font-family: 'Poppins';
+    display: inline-block;
+    background-color: transparent;
+    border: 7px solid #BBE1FA;
+    color: #BBE1FA;
+    padding: 15px;
+    border-radius: 70px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 40px;
+    transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #BBE1FA;
+    color: #021A2B;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+p, .result-section label {
+    font-size: 28px;
+}
+
+button {
+    font-family: 'Poppins';
+    display: inline-block;
+    background-color: #FF4C29;
+    border: 7px solid #FF2B02;
+    color: #FFFFFF;
+    padding: 10px;
+    border-radius: 50px;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 10px 20px;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    background-color: #FF2B02;
+    color: #000000;
+}
+
+.display-waterbuilds {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 20px;
+}
+
+.sector-content label,
+.sector-content select,
+.sector-content button {
+    width: 50%;
+}
+
+table {
+    margin: 20px auto;
+    border-collapse: collapse;
+    width: 80%;
+    background-color: #FFFFFF;
+    color: #021A2B;
+}
+
+table th,
+table td {
+    border: 1px solid #BBE1FA;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #BBE1FA;
+    color: #021A2B;
+    font-weight: bold;
+}
+
+footer {
+    background-color: rgba(217, 217, 217, 0.1);
+    color: #61dafb;
+    text-align: center;
+    margin-top:auto;
+    width: 100%;
+    height: 30px;
+}
+
+footer p {
+    text-align: center;
+    margin: 0;
+    font-size:1.1rem;
+}

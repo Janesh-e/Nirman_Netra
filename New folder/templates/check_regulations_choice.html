@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Mode</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="modal">
+        <div class="modal-content">
+            <h3>Do you want to proceed with automated mode?</h3>
+            <form method="POST">
+                <button type="submit" name="automated_mode">Yes</button>
+                <button type="submit" name="manual_mode">No, take me to manual mode</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

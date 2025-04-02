@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detect WaterBody - Nagaram</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='waterDetect.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">NAGARAM</div>
+            <div class="title">
+                <h1>AUTHORIZATION</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>Checking Authorization of Buildings</h1>
+
+        <div class="upload-section">
+            <form action="{{ url_for('waterbody_detect') }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="survey">Select Survey:</label>
+                    <select name="survey" id="survey" required>
+                        <option value="">-- Select Survey --</option>
+                        {% for survey in surveys %}
+                        <option value="{{ survey.name }}">{{ survey.name }} ({{ survey.date }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sector">Select Sector:</label>
+                    <select name="sector" id="sector" required>
+                        <option value="">-- Select Sector --</option>
+                        {% for sector in sectors %}
+                        <option value="{{ sector.id }}">{{ sector.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="upload-btn">Fetch Image</button>
+            </form>
+        </div>
+
+        <div class="predicted-water-buildings">
+            {% if combined_mask_filename %}
+            <!-- Display the combined mask as an image -->
+            <h3>DETECTED BUILDINGS AND WATERBODY:</h3>
+            <img src="{{url_for('uploaded_file', filename=combined_mask_filename)}}" alt="Combined Mask"
+                style="max-width: 100%; height: auto;">
+            {% endif %}
+        </div>
+
+        <div id="distance-results">
+            <!-- Display the results after processing -->
+            {% if distance_visualisation_filename %}
+            <h3>DETECTED DISTANCES:</h3>
+            <img src="{{url_for('uploaded_file', filename=distance_visualisation_filename)}}" alt="Distances Mask"
+                style="max-width: 100%; height: auto;">
+            {% endif %}
+            {% if result %}
+            <h2>Processing Results:</h2>
+            <p>Address and Distance from Waterbody:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Address</th>
+                        <th>Distance (meters)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in result.distances %}
+                    <tr>
+                        <td>{{ item.address }}</td>
+                        <td>{{ item.distance }} m</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Nirmaan Netra. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>

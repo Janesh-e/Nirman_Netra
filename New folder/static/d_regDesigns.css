@@ -1,0 +1,225 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body {
+    min-height: 100vh;
+    font-family: "Fira Sans", sans-serif;
+    background-color: #0b132b;
+    color: #ffffff; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Header styling */
+header {
+    background-color: rgba(217, 217, 217, 0.1);
+    color: white;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+}
+.header-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    box-sizing: border-box;
+    position: relative;
+}
+.logo img {
+    width: 15%;
+}
+.title h1 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bolder;
+    font-size: 40px;
+    color: #FFFFFF;
+}
+
+.add-drone button {
+    padding: 10px 15px;
+    background-color: #f93f3f;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.add-drone button:hover {
+    background-color: #c82f2f;
+}
+
+/* Main section styling */
+main {
+    width: 90%;
+    max-width: 800px;
+    margin: 20px auto;
+    text-align: center;
+}
+
+.intro h1 {
+    font-size: 28px;
+    color: #61dafb;
+    margin-bottom: 20px;
+}
+
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.upload-section label {
+    color: #61dafb;
+    font-size: 16px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.upload-section input {
+    justify-content: center;
+    align-items: center;
+    padding-left: 80px;
+    margin: 10px 0;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.upload-section button {
+    font-family: 'Poppins';
+    display: inline-block;
+    background-color: transparent;
+    border: 7px solid #BBE1FA;
+    color: #BBE1FA;
+    padding: 15px;
+    border-radius: 70px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-section button:hover {
+    background-color: #BBE1FA;
+    color: #021A2B;
+}
+
+/* Process section styling */
+.process-section {
+    margin-top: 20px;
+}
+
+.process-section h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #f93f3f;
+}
+
+button {
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Poppins';
+    display: inline-block;
+    background-color: #FF4C29;
+    border: 7px solid #FF2B02;
+    color: #FFFFFF;
+    border-radius: 50px;
+    font-size: 20px;
+    margin: auto;
+    padding: 10px;
+}
+
+button:hover {
+    background-color: #FF2B02;
+    color: #000000;
+}
+.end {
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-family: 'Poppins';
+    display: inline-block;
+    background-color: #FF0000;
+    border: none;
+    color: #FFFFFF;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: auto;
+}
+.end:hover {
+    background-color: #BF0000;
+    color: black;
+}
+/* Image and result section */
+.result-section {
+    margin: 30px 0;
+}
+
+.result-section img {
+    max-width: 100%;
+    height: auto;
+    border: 3px solid #ff5733;
+    border-radius: 8px;
+}
+
+/* Dimensions table */
+.dimensions-container {
+    background-color: #1c2541;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    margin: 20px 0;
+}
+
+.dimensions-container h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #61dafb;
+}
+
+table {
+    background-color: #FF2B02;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+
+th {
+    color: #0b132b;
+}
+
+td {
+    background-color: #1c2541;
+    color: white;
+}
+
+/* Footer styling */
+footer {
+    background-color: rgba(217, 217, 217, 0.1);
+    color: #61dafb;
+    text-align: center;
+    margin-top:auto;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+}
+
+footer p {
+    text-align: center;
+    margin: 0;
+    font-size:1rem;
+}

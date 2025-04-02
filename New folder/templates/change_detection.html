@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Detection - Nagaram</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='changeDetect.css') }}">
+</head>
+
+<body>
+    <div class="cd-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="{{ url_for('static', filename='logo/nagaram_2.png')}}", alt="nagaram">
+            </div>
+
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('check_authorization') }}">Authorize</a></li>
+                   <!-- <li><a href="{{ url_for('waterbody_detect') }}">Detect Water Body</a></li> -->
+                   <!-- <li><a href="{{ url_for('check_regulations') }}">Regulations</a></li> -->
+                    <li><a href="{{ url_for('change_detection') }}">Detect Changes</a></li>
+                   <!-- <li><a href="#">Generate Orthophoto</a></li> -->
+                    <li><a href="{{ url_for('data_upload') }}">View/Upload Data</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+    <main class = "main-content">
+        <h2>CHANGE DETECTION</h2>
+        <div class="model-page">
+            <form action="{{ url_for('change_detection') }}" method="POST">
+                <h3>Select Before Survey and Sector</h3>
+                <label for="before_survey">Before Survey:</label>
+                <select name="before_survey" id="before_survey" required>
+                    {% for survey in surveys %}
+                    <option value="{{ survey.name }}">{{ survey.name }}</option>
+                    {% endfor %}
+                </select>
+                
+                <label for="before_sector">Before Sector:</label>
+                <select name="before_sector" id="before_sector" required>
+                    {% for sector in sectors %}
+                    <option value="{{ sector.name }}">{{ sector.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <h3>Select Current Survey and Sector</h3>
+                <label for="after_survey">Current Survey:</label>
+                <select name="after_survey" id="after_survey" required>
+                    {% for survey in surveys %}
+                    <option value="{{ survey.name }}">{{ survey.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="after_sector">Current Sector:</label>
+                <select name="after_sector" id="after_sector" required>
+                    {% for sector in sectors %}
+                    <option value="{{ sector.name }}">{{ sector.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit">Perform Change Detection</button>
+            </form>
+        </div>
+
+        <div>
+            {% if change_mask_path %}
+            <h3>Change Detection Results</h3>
+            <p style="color:#0f182c;"><strong>Percentage Change Detected:</strong> {{ change_percentage | round(2) }}%</p>
+            <img src="{{ url_for('uploaded_file', filename=before_filename) }}" alt="before" style="width:200px;">
+            <img src="{{ url_for('uploaded_file', filename=after_filename) }}" alt="after" style="width:200px;">
+            <img src="{{ url_for('uploaded_file', filename=change_mask_filename) }}" alt="Change Mask" style="width:200px;">
+            {% endif %}
+        </div>
+        
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <footer>
+            <i class="fa fa-copyright" aria-hidden="true"></i> 2025 Nagaram. All rights reserved.
+        </footer>
+        </main>
+</body>
+</html>

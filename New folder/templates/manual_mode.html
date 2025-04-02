@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Regulations - Nagaram</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo/final_logo.png') }}" alt="Logo">
+            </div>
+            <div class="title">
+                <h1>NAGARAM</h1>
+            </div>
+            <div class="add-drone">
+                <form action="{{ url_for('add_drone') }}" method="POST">
+                    <button type="submit">Add New Drone</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="intro">
+            <h1>Check Regulations for a Building</h1>
+        </section>
+
+        <div class="upload-container">
+            <!-- Upload image form -->
+            <div class="upload-section">
+                <form action="{{ url_for('upload_image') }}" method="POST" enctype="multipart/form-data">
+                    <label for="file" style="font-size: 1.2rem;">Upload Image (JPG or TIFF):</label><br>
+                    <input type="file" name="file" accept=".jpg,.jpeg,.tiff" required><br><br>
+                    <button type="submit">Upload Image</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Nirmaan Netra. All rights reserved.</p>
+    </footer>
+</body>

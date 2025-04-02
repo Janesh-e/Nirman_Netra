@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nagaram</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="static/newcss/index.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="left-section">
+        <img src="static/logo/l_page.jpg" alt="Drone Image" height="100%" width="100%" />
+      </div>
+      <div class="right-section">
+        <img src="static/logo/nagaram_startup.png" height="96px">
+        <h2>Login</h2>
+        <div class="box">
+          <form action="{{ url_for('login') }}" method="POST">
+            <div class="input-container">
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+              />
+              <i class="fa fa-user"></i>
+          </div>
+
+          <div class="input-container">
+              <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+              />
+              <i class="fa fa-key"></i>
+          </div>
+
+          <div class="extras">
+              <label><input type="checkbox" name="remember" /> Remember me</label>
+              <a href="/forgot-password">Forgot password?</a>
+          </div>
+          <button type="submit" >Login</button>
+          </form>
+          
+        </div>
+        <p>
+          Don't have an account? <a href="{{ url_for('register') }}">Register here</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

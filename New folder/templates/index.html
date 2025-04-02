@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nagaram</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@500;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap"
+    />
+    <link rel="stylesheet" href="static/newcss/styles.css" />
+  </head>
+  <body>
+    <div class="main-container">
+      <!-- Header Section -->
+      <header>
+        <div class="flex-row">
+          <img src="{{ url_for('static', filename='logo/naglogo.png') }}" alt="Logo">
+
+          <div class="home">Home</div>
+          <div class="about">About</div>
+          <div class="regulations-2">Regulations</div>
+          <div class="contact">Contact</div>
+          {% if not session.get('user_id') %}
+          <button class="log-rectangle" ><a href="{{ url_for('login') }}">Login/Register</a></button>
+          {% else %}
+          <button class="log-rectangle" ><a href="{{ url_for('login') }}">Dashboard</a></button>
+          {% endif %}
+
+
+        </div>
+      </header>
+
+      <!-- Title Section -->
+      <section class="title-section">
+
+        <div class="online-monitoring">
+          Online Monitoring<br>of Construction
+        </div>
+        <img src="static/newcss/droneOG.gif" alt="Drone Animation" class="drone-video" />
+        <div class="monitor-construction">
+          Monitor construction across the city and check its regulations and
+          authorization effortlessly
+        </div>
+          <button class="continue">Continue</button>
+        <br>
+        <br>
+        <br>
+        <br>
+
+      </section>
+      <!-- Regulations Section -->
+      <section class="regulations">
+        <div class="decore"></div>
+        <div class="building-access">
+          <p>
+            No building shall be erected so as to deprive any other building of
+            the means of access.
+          </p>
+          <p>
+            Every person who erects a building shall not at any time erect or
+            cause or permit to erect or re-erect any building, which in any way
+            encroaches upon or diminishes the area set apart as means of access.
+          </p>
+          <p>
+            For buildings identified in Bye-law No. 6.2.4.1, the following
+            provisions of means of access shall be ensured.
+          </p>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

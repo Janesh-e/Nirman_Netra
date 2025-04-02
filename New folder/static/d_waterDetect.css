@@ -1,0 +1,159 @@
+/* Importing fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Fira+Sans:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+
+/* General reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fira Sans', sans-serif;
+    background-color: #1a2a3a; /* Background color */
+    color: #ffffff; /* Default text color */
+    line-height: 1.6;
+}
+
+/* Header Styles */
+header {
+    background-color: #1a2a3a; /* Header background color */
+    padding: 15px 20px;
+    color: #ff4c4c;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.title h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Main Container */
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #4f6381; /* Form container background */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Headings */
+.container h1 {
+    font-family: 'Poppins', sans-serif;
+    color: #ff4c4c;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h3 {
+    font-family: 'Poppins', sans-serif;
+    color: #ff4c4c;
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* Form Section */
+.upload-section {
+    margin: 20px 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ff4c4c;
+    border-radius: 4px;
+    background-color: #4f6381;
+    color: #ffffff;
+}
+
+select:focus {
+    outline: none;
+    border-color: #ff6f6f;
+}
+
+.upload-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    background-color: #ff4c4c;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+    background-color: #ff6f6f;
+}
+
+/* Results Section */
+.predicted-water-buildings img,
+#distance-results img {
+    display: block;
+    margin: 20px auto;
+    border-radius: 8px;
+    max-width: 100%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    text-align: left;
+    background-color: #4f6381;
+}
+
+table th,
+table td {
+    padding: 10px;
+    border: 1px solid #ff4c4c;
+}
+
+table th {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ff4c4c;
+    color: #ffffff;
+}
+
+table td {
+    color: #ffffff;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    background-color: #1a2a3a;
+    color: #ffffff;
+    padding: 10px 0;
+    font-size: 14px;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}

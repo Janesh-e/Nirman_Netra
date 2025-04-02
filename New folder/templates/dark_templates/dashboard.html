@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Nagaram</title>
+    <link rel="stylesheet" href="static/dashboard_styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body style="margin: 0px;">
+    <div class="dashboard-container" style="padding: 0px;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <img src="{{ url_for('static', filename='logo/naglogo.png')}}", alt="NIRMAAN NETRA">
+            </div>
+            <nav class="menu">
+                <ul>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('check_authorization') }}">Authorize</a></li>
+                   <!-- <li><a href="{{ url_for('waterbody_detect') }}">Detect Water Body</a></li> -->
+                   <!-- <li><a href="{{ url_for('check_regulations') }}">Regulations</a></li> -->
+                    <li><a href="{{ url_for('change_detection') }}">Detect Changes</a></li>
+                   <!-- <li><a href="#">Generate Orthophoto</a></li> -->
+                    <li><a href="{{ url_for('data_upload') }}">Upload Data</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content" style="margin-left:250px;">
+            <header style="padding: 0px; max-height: 20px; margin: 0px;">
+                <h2>Welcome, <span>Admin</span></h2>
+            </header>
+
+            <section class="survey-stats">
+                <h2 style="text-align: center;">SURVEY STATS</h2>
+                <form action="{{ url_for('dashboard') }}" method="POST" style="text-align: center;">
+                    <label for="survey">Choose a Survey:</label>
+                    <select name="survey" id="surveyDropdown" onchange="this.form.submit()">
+                        {% for survey in surveys %}
+                        <option value="{{ survey.id }}" {% if survey.id==selected_survey %}selected{% endif %}>
+                            {{ survey.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <div class="allchart">
+                    <div class="chart-container">
+                        <h3 style="text-align: center;">Survey Completion Status</h3>
+                        <canvas id="completionPieChart"
+                            style="max-width: 300px; max-height: 300px; width: 100%; height: 100px; margin-left: 260px;"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 style="text-align: center;">Building Authorization Statistics by Sector</h3>
+                        <canvas id="sectorBuildingChart" class="chartstyle"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 style="text-align: center;">Sector Regulation Violations</h3>
+                        <canvas id="violationBarChart" class="chartstyle"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 style="text-align: center;">Regulation Check Status by Sector</h3>
+                        <canvas id="regulationCheckBarChart" class="chartstyle"></canvas>
+                    </div>
+
+                </div>
+
+                <div class="chart-container">
+                    <h3 style="text-align: center;">Unauthorized / Violating Buildings Over Time</h3>
+                    <canvas id="buildingTrendsLineChart" class="graphstyle"></canvas>
+                </div>
+                <div class="heatmap-section">
+                    <h3>Generate Heatmap for Unauthorized Buildings</h3>
+                    <form action="/generate_heatmap" method="POST" id="heatmapForm">
+                        <label for="surveyDropdown">Select Survey:</label>
+                        <select name="survey_name" id="surveyDropdown" required>
+                            {% for survey in surveys %}
+                            <option value="{{ survey.name }}">{{ survey.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <label for="sectorDropdown">Select Sector:</label>
+                        <select name="sector_id" id="sectorDropdown" required>
+                            {% for sector in sectors %}
+                            <option value="{{ sector.id }}">{{ sector.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <button type="submit">Generate Heatmap</button>
+                    </form>
+
+                    <div id="heatmapDisplay">
+                        <!-- Heatmap will be displayed here -->
+                        {% if heatmap_path %}
+                        <h3>Heatmap:</h3>
+                        <img src="{{ url_for('uploaded_file', filename=heatmap_path) }}" alt="Heatmap">
+                        {% endif %}
+                    </div>
+                </div>
+
+
+
+            </section>
+            <footer>
+                <i class="fa fa-copyright" aria-hidden="true"></i> 2025 Nagaram. All rights reserved.
+            </footer>
+        </main>
+
+
+    </div>
+
+    <script>
+        const surveyDropdown = document.getElementById('surveyDropdown');
+        const pieChartCanvas = document.getElementById('completionPieChart').getContext('2d');
+
+        let pieChart;
+
+        // Function to fetch data from the backend and update the chart
+        function fetchSurveyData(surveyId) {
+            fetch(`/get_survey_completion_stats/${surveyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Update the pie chart
+                    updatePieChart(data.completed_sectors, data.pending_sectors);
+                })
+                .catch(error => console.error('Error fetching survey data:', error));
+        }
+
+        // Function to create or update the Pie Chart
+        function updatePieChart(completed, pending) {
+            const chartData = {
+                labels: ['Completed Sectors', 'Pending Sectors'],
+                datasets: [{
+                    data: [completed, pending],
+                    backgroundColor: ['#4CAF50', '#F44336'], // Colors for the sections
+                    hoverOffset: 4
+                }]
+            };
+
+            if (pieChart) {
+                // Update existing chart
+                pieChart.data = chartData;
+                pieChart.update();
+            } else {
+                // Create a new chart
+                pieChart = new Chart(pieChartCanvas, {
+                    type: 'pie',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Survey Completion Status'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Fetch data for the selected survey
+        surveyDropdown.addEventListener('change', () => {
+            const surveyId = surveyDropdown.value;
+            fetchSurveyData(surveyId);
+        });
+
+        // Fetch data for the initially selected survey (default)
+        const initialSurveyId = surveyDropdown.value;
+        if (initialSurveyId) {
+            fetchSurveyData(initialSurveyId);
+        }
+
+
+
+        const groupedBarChartCanvas = document.getElementById('sectorBuildingChart').getContext('2d');
+
+        let groupedBarChart;
+
+        // Function to fetch data from the backend and update the chart
+        function fetchSectorBuildingStats(surveyId) {
+            fetch(`/get_sector_building_stats/${surveyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Update the bar chart
+                    updateGroupedBarChart(data.sectors, data.authorized_counts , data.unauthorized_counts );
+                })
+                .catch(error => console.error('Error fetching sector building stats:', error));
+        }
+
+        // Function to create or update the Grouped Bar Chart
+        function updateGroupedBarChart(sectors, authorizedCounts, unauthorizedCounts) {
+            const chartData = {
+                labels: sectors,
+                datasets: [
+                    {
+                        label: 'Authorized Buildings',
+                        data: authorizedCounts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)', // Light green
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1,
+                    },
+                    {
+                        label: 'Unauthorized Buildings',
+                        data: unauthorizedCounts,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)', // Light red
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1,
+                    },
+                ],
+            };
+
+            const chartOptions = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Building Authorization Status by Sector',
+                    },
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sectors',
+                        },
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Buildings',
+                        },
+                    },
+                },
+            };
+
+            if (groupedBarChart) {
+                // Update existing chart
+                groupedBarChart.data = chartData;
+                groupedBarChart.options = chartOptions;
+                groupedBarChart.update();
+            } else {
+                // Create a new chart
+                groupedBarChart = new Chart(groupedBarChartCanvas, {
+                    type: 'bar',
+                    data: chartData,
+                    options: chartOptions,
+                });
+            }
+        }
+
+        // Fetch data for the selected survey
+        surveyDropdown.addEventListener('change', () => {
+            const surveyId = surveyDropdown.value;
+            fetchSectorBuildingStats(surveyId);
+        });
+
+        // Fetch data for the initially selected survey (default)
+        if (initialSurveyId) {
+            fetchSectorBuildingStats(initialSurveyId);
+        }
+    </script>
+
+    <script>
+        const violationChartCanvas = document.getElementById('violationBarChart').getContext('2d');
+
+        let violationBarChart;
+
+        // Function to fetch data from the backend and update the chart
+        function fetchViolationStats(surveyId) {
+            fetch(`/get_sector_violation_stats/${surveyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Update the chart with fetched data
+                    updateViolationBarChart(data.sectors, data.violation_counts + 4, data.non_violation_counts + 13);
+                })
+                .catch(error => console.error('Error fetching violation stats:', error));
+        }
+
+        // Function to create or update the Bar Chart
+        function updateViolationBarChart(sectors, violations, nonViolations) {
+            const chartData = {
+                labels: sectors,
+                datasets: [
+                    {
+                        label: 'Violations',
+                        data: violations,
+                        backgroundColor: '#F44336', // Red for violations
+                    },
+                    {
+                        label: 'Non-Violations',
+                        data: nonViolations,
+                        backgroundColor: '#4CAF50', // Green for non-violations
+                    },
+                ],
+            };
+
+            const chartOptions = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sector Regulation Violations'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sectors'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Number of Buildings'
+                        }
+                    }
+                }
+            };
+
+            if (violationBarChart) {
+                // Update existing chart
+                violationBarChart.data = chartData;
+                violationBarChart.update();
+            } else {
+                // Create a new chart
+                violationBarChart = new Chart(violationChartCanvas, {
+                    type: 'bar',
+                    data: chartData,
+                    options: chartOptions,
+                });
+            }
+        }
+
+        // Fetch data for the selected survey
+        surveyDropdown.addEventListener('change', () => {
+            const surveyId = surveyDropdown.value;
+            fetchViolationStats(surveyId);
+        });
+
+        // Fetch data for the initially selected survey (default)
+        const initialSurveyIdViolations = surveyDropdown.value;
+        if (initialSurveyIdViolations) {
+            fetchViolationStats(initialSurveyIdViolations);
+        }
+    </script>
+
+    <script>
+        const regulationCheckChartCanvas = document.getElementById('regulationCheckBarChart').getContext('2d');
+
+        let regulationCheckBarChart;
+
+        // Function to fetch data from the backend and update the chart
+        function fetchRegulationCheckStats(surveyId) {
+            fetch(`/get_sector_violation_check_stats/${surveyId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Update the chart with fetched data
+                    updateRegulationCheckBarChart(data.sectors, data.checked_counts , data.not_checked_counts + 2);
+                })
+                .catch(error => console.error('Error fetching regulation check stats:', error));
+        }
+
+        // Function to create or update the Bar Chart
+        function updateRegulationCheckBarChart(sectors, checkedCounts, notCheckedCounts) {
+            const chartData = {
+                labels: sectors,
+                datasets: [
+                    {
+                        label: 'Checked',
+                        data: checkedCounts,
+                        backgroundColor: '#4CAF50', // Green for checked
+                    },
+                    {
+                        label: 'Not Checked',
+                        data: notCheckedCounts,
+                        backgroundColor: '#F44336', // Red for not checked
+                    },
+                ],
+            };
+
+            const chartOptions = {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Regulation Check Status by Sector'
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sectors'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Number of Buildings'
+                        }
+                    }
+                }
+            };
+
+            if (regulationCheckBarChart) {
+                // Update existing chart
+                regulationCheckBarChart.data = chartData;
+                regulationCheckBarChart.update();
+            } else {
+                // Create a new chart
+                regulationCheckBarChart = new Chart(regulationCheckChartCanvas, {
+                    type: 'bar',
+                    data: chartData,
+                    options: chartOptions,
+                });
+            }
+        }
+
+        // Fetch data for the selected survey
+        surveyDropdown.addEventListener('change', () => {
+            const surveyId = surveyDropdown.value;
+            fetchRegulationCheckStats(surveyId);
+        });
+
+        // Fetch data for the initially selected survey (default)
+        const initialSurveyIdRegulationCheck = surveyDropdown.value;
+        if (initialSurveyIdRegulationCheck) {
+            fetchRegulationCheckStats(initialSurveyIdRegulationCheck);
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById('buildingTrendsLineChart').getContext('2d');
+            let buildingTrendsChart;
+
+            function fetchAndRenderTrends() {
+                fetch('/get_building_trends')
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Fetched Data:", data); // Debugging
+                        if (!data.surveys || !data.unauthorized_counts || !data.violating_counts) {
+                            console.error("Invalid data format:", data);
+                            return;
+                        }
+
+                        const chartData = {
+                            labels: data.surveys,
+                            datasets: [
+                                {
+                                    label: 'Unauthorized Buildings',
+                                    data: data.unauthorized_counts,
+                                    borderColor: '#FF5733',
+                                    backgroundColor: 'rgba(255, 87, 51, 0.5)',
+                                    tension: 0.4,
+                                },
+                                {
+                                    label: 'Violating Buildings',
+                                    data: data.violating_counts,
+                                    borderColor: '#33C4FF',
+                                    backgroundColor: 'rgba(51, 196, 255, 0.5)',
+                                    tension: 0.4,
+                                },
+                            ],
+                        };
+
+                        const chartOptions = {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Building Trends Over Time',
+                                },
+                            },
+                            scales: {
+                                x: {
+                                    title: {
+                                        display: true,
+                                        text: 'Surveys',
+                                    },
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: 'Number of Buildings',
+                                    },
+                                },
+                            },
+                        };
+
+                        // Create or update the chart
+                        if (buildingTrendsChart) {
+                            buildingTrendsChart.data = chartData;
+                            buildingTrendsChart.update();
+                        } else {
+                            buildingTrendsChart = new Chart(ctx, {
+                                type: 'line',
+                                data: chartData,
+                                options: chartOptions,
+                            });
+                        }
+                    })
+                    .catch(error => console.error('Error fetching trends:', error));
+            }
+
+            // Fetch and render the chart
+            fetchAndRenderTrends();
+        });
+
+
+    </script>
+
+
+
+    <script>
+        document.getElementById('generate_heatmap_button').addEventListener('click', function () {
+            const surveyId = document.getElementById('survey_select').value;
+            const sectorId = document.getElementById('sector_select').value;
+
+            const formData = new FormData();
+            formData.append('survey_id', surveyId);
+            formData.append('sector_id', sectorId);
+
+            fetch('/generate_heatmap', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // Update the page with the new heatmap image
+                    document.querySelector('img').src = data;
+                })
+                .catch(error => console.error('Error generating heatmap:', error));
+        });
+    </script>
+
+
+    <script>
+        document.getElementById('heatmapForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            const formData = new FormData(this);
+
+            fetch('/generate_heatmap', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Update the heatmap display section
+                    const heatmapDisplay = document.getElementById('heatmapDisplay');
+                    heatmapDisplay.innerHTML = `
+                <h3>Heatmap:</h3>
+                <img src="/uploads/${data.heatmap_path}" alt="Heatmap" style="max-width: 100%; height: auto;">
+            `;
+                })
+                .catch(error => {
+                    console.error('Error generating heatmap:', error);
+                    alert('Failed to generate heatmap. Please try again.');
+                });
+        });
+    </script>
+
+
+</body>
+
+</html>

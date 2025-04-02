@@ -1,0 +1,133 @@
+/* Importing fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Fira+Sans:wght@400&display=swap');
+
+/* General Reset */
+body {
+    margin: 0;
+    font-family: 'Fira Sans', sans-serif;
+    background-color: #1a2a3a; /* Background color */
+    color: #ffffff; /* Default text color */
+}
+
+/* Header */
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #1a2a3a; /* Header background color */
+}
+
+header h1 {
+    font-family: 'Poppins', sans-serif; /* Heading font */
+    color: #ffffff; /* Heading text color */
+    font-size: 36px;
+    margin: 0;
+}
+
+/* Main Content */
+main {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Form Styles */
+form {
+    background-color: #0f182c; /* Form background */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+h3 {
+    font-family: 'Poppins', sans-serif;
+    color: #ff4c4c; /* Heading text color */
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+label {
+    font-size: 16px;
+    color: #ffffff; /* Label text color */
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #1a2a3a; /* Select background */
+    color: #ffffff; /* Select text color */
+    border: 1px solid #ff4c4c; /* Border color */
+    border-radius: 4px;
+}
+
+select:focus {
+    outline: none;
+    border-color: #ff726f; /* Border color when focused */
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #ff4c4c; /* Button background color */
+    color: #ffffff; /* Button text color */
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff726f; /* Button hover color */
+}
+
+/* Change Detection Results */
+h3 {
+    font-family: 'Poppins', sans-serif;
+    color: #ff4c4c;
+    font-size: 24px;
+    margin-top: 40px;
+}
+
+p {
+    font-size: 18px;
+    color: #ffffff;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+/* Error Message */
+.error {
+    color: #ff4c4c;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #1a2a3a;
+    color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0;
+}
+
+.logo{
+    align-items: left;
+    justify-content: left;
+    text-align: left;
+    color: #ff4c4c;
+}
